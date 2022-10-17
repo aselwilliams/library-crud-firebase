@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import { Form, Alert, InputGroup, Button, ButtonGroup } from "react-bootstrap";
+import BookDataService from "../services/book.services";
 
 const AddBook = ({id, setBookId}) => {
     const [title, setTitle] = useState('');
@@ -9,8 +10,25 @@ const AddBook = ({id, setBookId}) => {
     const [flag, setFlag] = useState(true);
     const [message, setMessage] = useState({ error: false, msg: "" });
     
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
+        setMessage('');
+        if(!title || ! author || !year){
+            setMessage({error: true, msg: "All fields are mandatory!"});
+            return;
+        }
+        const newBook = {
+            title,
+            author, year, status
+        }
+        console.log(newBook)
+        try {
+            await BookDataService.addBooks(newBook);
+            setMessage({error: false, msg: "New Book added successfully"})
+        } catch (err) {
+            setMessage({error: true, msg: err.message});
+        }
     }
     return (
         <>
@@ -56,7 +74,7 @@ const AddBook = ({id, setBookId}) => {
                   <Form.Control
                     type="text"
                     placeholder="Year Published"
-                    value={author}
+                    value={year}
                     onChange={(e) => setYear(e.target.value)}
                   />
                 </InputGroup>
