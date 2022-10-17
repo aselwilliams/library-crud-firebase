@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Button } from "react-bootstrap";
 import BookDataService from "../services/book.services";
 
-const BooksList = ({ getBookId }) => {
+const BooksList = ({ getBookId, setMessage}) => {
   const [books, setBooks] = useState([]);
   useEffect(() => {
     getBooks();
@@ -14,19 +14,19 @@ const BooksList = ({ getBookId }) => {
     setBooks(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
 
-  const deleteHandler = async (id) => {
+  const handleDelete = async (id) => {
     await BookDataService.deleteBook(id);
+    setMessage({error: true, msg:"Book deleted successfully!"})
     getBooks();
   };
   return (
     <>
       <div className="mb-2">
-        <Button variant="dark edit" onClick={getBooks}>
+        <Button variant="dark fw-bold" onClick={getBooks}>
           Refresh List
         </Button>
       </div>
 
-      {/* <pre>{JSON.stringify(books, undefined, 2)}</pre>} */}
       <Table striped bordered hover size="sm">
         <thead>
           <tr>
@@ -58,7 +58,7 @@ const BooksList = ({ getBookId }) => {
                   <Button
                     variant="danger"
                     className="delete"
-                    onClick={(e) => deleteHandler(doc.id)}
+                    onClick={(e) => handleDelete(doc.id)}
                   >
                     Delete
                   </Button>

@@ -1,15 +1,14 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Form, Alert, InputGroup, Button, ButtonGroup } from "react-bootstrap";
 import BookDataService from "../services/book.services";
+import "../App.css";
 
-const AddBook = ({id, setBookId}) => {
+const AddBook = ({id, setBookId, setMessage, message}) => {
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
     const [year, setYear] = useState('');
     const [status, setStatus] = useState('Available')
     const [flag, setFlag] = useState(true);
-    const [message, setMessage] = useState({ error: false, msg: "" });
-    
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -24,12 +23,41 @@ const AddBook = ({id, setBookId}) => {
         }
         console.log(newBook)
         try {
-            await BookDataService.addBooks(newBook);
+            if (id !== undefined && id !== "") {
+                await BookDataService.updateBook(id, newBook);
+                setBookId("")
+                setMessage({error: false, msg: "Book updated successfully"}) 
+            } else {
+            await BookDataService.addBook(newBook);
             setMessage({error: false, msg: "New Book added successfully"})
+            }
+        } catch (err) {
+            setMessage({error: true, msg: err.message});
+        }
+        setTitle('');
+        setAuthor('');
+        setYear('')
+    }
+
+    const handleEdit = async () => {
+        setMessage("");
+        try {
+            const docSnap = await BookDataService.getBook(id);
+            setTitle(docSnap.data().title);
+            setAuthor(docSnap.data().author);
+            setYear(docSnap.data().year);
+            setStatus(docSnap.data().status)
         } catch (err) {
             setMessage({error: true, msg: err.message});
         }
     }
+    useEffect(() => {
+        console.log('id for edit', id)
+        if(id !==undefined && id!=="") {
+            handleEdit()
+        }
+    }, [id])
+
     return (
         <>
           <div className="p-4 box">
@@ -46,7 +74,7 @@ const AddBook = ({id, setBookId}) => {
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3" controlId="formBookTitle">
                 <InputGroup>
-                  <InputGroup.Text id="formBookTitle">B</InputGroup.Text>
+                  <InputGroup.Text id="formBookTitle" className='bg-dark text-white fw-bold'>BT</InputGroup.Text>
                   <Form.Control
                     type="text"
                     placeholder="Book Title"
@@ -54,11 +82,11 @@ const AddBook = ({id, setBookId}) => {
                     onChange={(e) => setTitle(e.target.value)}
                   />
                 </InputGroup>
-              </Form.Group>
+              </Form.Group> 
     
               <Form.Group className="mb-3" controlId="formBookAuthor">
                 <InputGroup>
-                  <InputGroup.Text id="formBookAuthor">A</InputGroup.Text>
+                  <InputGroup.Text id="formBookAuthor" className='bg-dark text-white fw-bold'>BA</InputGroup.Text>
                   <Form.Control
                     type="text"
                     placeholder="Book Author"
@@ -70,7 +98,7 @@ const AddBook = ({id, setBookId}) => {
 
               <Form.Group className="mb-3" controlId="formYearPublished">
                 <InputGroup>
-                  <InputGroup.Text id="formYearPublished">Y</InputGroup.Text>
+                  <InputGroup.Text id="formYearPublished" className='bg-dark text-white fw-bold'>YP</InputGroup.Text>
                   <Form.Control
                     type="text"
                     placeholder="Year Published"
@@ -91,7 +119,7 @@ const AddBook = ({id, setBookId}) => {
                   Available
                 </Button>
                 <Button
-                  variant="danger"
+                  variant="warning"
                   disabled={!flag}
                   onClick={(e) => {
                     setStatus("Not Available");
@@ -102,8 +130,8 @@ const AddBook = ({id, setBookId}) => {
                 </Button>
               </ButtonGroup>
               <div className="d-grid gap-2">
-                <Button variant="primary" type="Submit">
-                  Add/ Update
+                <Button variant="dark" type="Submit" className='fw-bold'>
+                  {id ? 'Update' : 'Add'}
                 </Button>
               </div>
             </Form>

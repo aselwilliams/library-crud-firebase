@@ -5,7 +5,7 @@ import { collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc } from '
 const bookCollectionRef = collection(db, 'books');
 
 class BookDataService {
-    addBooks=(newBook) => {
+    addBook=(newBook) => {
        return addDoc(bookCollectionRef, newBook); 
     }
 

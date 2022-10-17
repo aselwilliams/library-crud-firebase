@@ -6,8 +6,9 @@ import "./App.css";
 
 function App() {
   const [bookId, setBookId] = useState("");
+  const [message, setMessage] = useState({ error: false, msg: "" });
 
-  const getBookIdHandler = (id) => {
+  const getBookId = (id) => {
     console.log("The ID of document to be edited: ", id);
     setBookId(id);
   };
@@ -15,21 +16,21 @@ function App() {
     <>
       <Navbar bg="dark" variant="dark" className="header">
         <Container>
-          <Navbar.Brand href="#home">Library - App</Navbar.Brand>
+          <Navbar.Brand href="#home">Library - App - Firebase</Navbar.Brand>
         </Container>
       </Navbar>
 
       <Container style={{ width: "400px" }}>
         <Row>
           <Col>
-            <AddBook id={bookId} setBookId={setBookId} />
+            <AddBook id={bookId} setBookId={setBookId} message={message} setMessage={setMessage}/>
           </Col>
         </Row>
       </Container>
       <Container>
         <Row>
           <Col>
-            <BooksList getBookId={getBookIdHandler} />
+            <BooksList getBookId={getBookId} setMessage={setMessage}/>
           </Col>
         </Row>
       </Container>
