@@ -56,9 +56,10 @@ const AddBook = ({ id, setBookId, setMessage, message }) => {
   useEffect(() => {
     console.log("id for edit", id);
     if (id !== undefined && id !== "") {
-      handleEdit();
+        handleEdit()
     }
-  }, [id]);
+    // eslint-disable-next-line 
+  }, [ id ]);
 
   return (
     <>
