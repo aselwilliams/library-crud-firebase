@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Button } from "react-bootstrap";
 import BookDataService from "../services/book.services";
 
-const BooksList = ({ getBookId, setMessage}) => {
+const BooksList = ({ getBookId, setMessage }) => {
   const [books, setBooks] = useState([]);
   useEffect(() => {
     getBooks();
@@ -16,7 +16,7 @@ const BooksList = ({ getBookId, setMessage}) => {
 
   const handleDelete = async (id) => {
     await BookDataService.deleteBook(id);
-    setMessage({error: true, msg:"Book deleted successfully!"})
+    setMessage({ error: true, msg: "Book deleted successfully!" });
     getBooks();
   };
   return (

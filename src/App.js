@@ -23,14 +23,19 @@ function App() {
       <Container style={{ width: "400px" }}>
         <Row>
           <Col>
-            <AddBook id={bookId} setBookId={setBookId} message={message} setMessage={setMessage}/>
+            <AddBook
+              id={bookId}
+              setBookId={setBookId}
+              message={message}
+              setMessage={setMessage}
+            />
           </Col>
         </Row>
       </Container>
       <Container>
         <Row>
           <Col>
-            <BooksList getBookId={getBookId} setMessage={setMessage}/>
+            <BooksList getBookId={getBookId} setMessage={setMessage} />
           </Col>
         </Row>
       </Container>
